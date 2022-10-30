@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #define HANDMADE_MATH
 #include "../lib/HandmadeMath.h"
@@ -17,6 +18,14 @@
 #include <GLFW/glfw3.h>
 
 #include "utils.h"
+
+//~ GRAPHICS
+#include "gfx/shader.h"
+#include "gfx/shader.c"
+
+//~ MEMORY MANAGEMENT
+#include "zeus_mem.h"
+#include "zeus_mem.c"
 
 #include "app.h"
 
