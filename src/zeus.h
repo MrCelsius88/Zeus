@@ -19,14 +19,15 @@
 
 #include "utils.h"
 
+//~ MEMORY MANAGEMENT
+#include "core/zeus_mem.h"
+#include "core/zeus_mem.c"
+
 //~ GRAPHICS
 #include "gfx/shader.h"
 #include "gfx/shader.c"
 
-//~ MEMORY MANAGEMENT
-#include "zeus_mem.h"
-#include "zeus_mem.c"
-
+//~ APP SETTINGS
 #include "app.h"
 
 #endif //ZEUS_H

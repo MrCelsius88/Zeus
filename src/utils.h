@@ -12,8 +12,8 @@ typedef int32_t s32;
 typedef uint32_t u32;
 typedef int64_t s64;
 typedef uint64_t u64;
-typedef float r32;
-typedef double r64;
+typedef float f32;
+typedef double f64;
 
 #ifdef HANDMADE_MATH
 
@@ -33,6 +33,7 @@ typedef hmm_quaternion Quaternion;
 #define Glue(a,b) Glue_(a,b)
 
 #define ArrayCount(a) (sizeof(a) / sizeof(*(a)))
+#define ForEach(array, type, var) { for (type* var = array; (var - array) < ArrayCount(array); var++) }
 
 #define Min(a,b) (((a)<(b))?(a):(b))
 #define Max(a,b) (((a)>(b))?(a):(b))
@@ -69,5 +70,8 @@ Min(sizeof(*(d)),sizeof(*(s))))
 #define MemoryCopyArray(d,s) MemoryCopy((d),(s),Min(sizeof(s),sizeof(d)))
 #define MemoryCopyTyped(d,s,c) MemoryCopy((d),(s), \
 Min(sizeof(*(d)),sizeof(*(s)))*(c))
+
+func inline bool
+PowerOfTwo(uintptr_t x) { return (x & (x - 1)) == 0; }
 
 #endif //UTILS_H
