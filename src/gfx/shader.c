@@ -88,5 +88,5 @@ SHADER_UNIFORM_FUNC(ShaderUniformInt, int)
 }
 SHADER_UNIFORM_FUNC(ShaderUniformF32, f32)
 {
-    glUniform1i(glGetUniformLocation(shader.handle, name), val);
+    glUniform1f(glGetUniformLocation(shader.handle, name), val);
 }

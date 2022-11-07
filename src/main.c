@@ -45,12 +45,19 @@ int main(int argc, char** argv)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
     // NOTE(Cel): Alr now for the ULTIMATE OPENGL TEST, rendering a triangle
-    float triangle1[] = 
+    float rectangle[] = 
     {
-        // Position            // Colors
-        0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f,     0.0f, 0.0f, 1.0f
+        // Position          // Colors            // Texcoords
+        0.5f, 0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f,   1.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+    };
+    
+    uint indicies[] =
+    {
+        0, 1, 3, // First Triangle
+        1, 2, 3  // Second Triangle
     };
     
     // TODO(Cel): Temporary Memory Arena, ill pull this out later (JUST FOR TESTING)
@@ -58,23 +65,46 @@ int main(int argc, char** argv)
     M_ArenaInit(&testArena, (void*)backBuff, 512);
     
     //~ NOTE(Cel): TEST OPENGL CODE 
-    uint triangle1ArrObj;
-    glGenVertexArrays(1, &triangle1ArrObj);
-    glBindVertexArray(triangle1ArrObj);
+    uint rectArrObj;
+    glGenVertexArrays(1, &rectArrObj);
+    glBindVertexArray(rectArrObj);
     
-    uint triangle1BuffObj;
-    glGenBuffers(1, &triangle1BuffObj);
-    glBindBuffer(GL_ARRAY_BUFFER, triangle1BuffObj);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle1), triangle1, GL_STATIC_DRAW);
+    uint rectVBO;
+    glGenBuffers(1, &rectVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, rectVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle), rectangle, GL_STATIC_DRAW);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    uint rectEBO;
+    glGenBuffers(1, &rectEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     
-    // TODO(Cel): Figure out why relative paths aren't working.
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    
     Shader shader = CreateShader(&testArena, "res/shaders/vertexShader.vs", "res/shaders/fragmentShader.fs");
+    
+    //~ IMAGE LOADING
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // TODO(Cel): Determine if we want interpolation in the long run.
+    
+    int width, height, nChannels;
+    u8* data = stbi_load("res/sprites/test_img.jpg", &width, &height, &nChannels, 0);
+    assert(data);
+    uint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(data);
     
     //~ NOTE(Cel): END TEST OPENGL CODE 
     
@@ -89,9 +119,9 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         
         BindShader(shader);
-        
-        glBindVertexArray(triangle1ArrObj);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindVertexArray(rectArrObj);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         //~ CHECK EVENTS & SWAP BUFFERS
         glfwPollEvents();
