@@ -26,6 +26,8 @@
 //~ GRAPHICS
 #include "gfx/shader.h"
 #include "gfx/shader.c"
+#include "gfx/texture.h"
+#include "gfx/texture.c"
 
 //~ APP SETTINGS
 #include "app.h"
