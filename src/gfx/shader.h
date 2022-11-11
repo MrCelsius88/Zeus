@@ -25,5 +25,6 @@ DestroyShader(Shader shader);
 SHADER_UNIFORM_FUNC(ShaderUniformBool, bool);
 SHADER_UNIFORM_FUNC(ShaderUniformInt, int);
 SHADER_UNIFORM_FUNC(ShaderUniformF32, f32);
+SHADER_UNIFORM_FUNC(ShaderUniformMat4, Mat4);
 
 #endif //SHADER_H

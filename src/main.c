@@ -64,7 +64,9 @@ int main(int argc, char** argv)
     u8* backBuff = malloc(4096);
     M_ArenaInit(&testArena, (void*)backBuff, 4096);
     
-    //~ NOTE(Cel): TEST OPENGL CODE 
+    //~ NOTE(Cel): TEST OPENGL CODE
+    
+    // TODO(Cel): Abstract all of this into a VAO and VBO stuct
     uint rectArrObj;
     glGenVertexArrays(1, &rectArrObj);
     glBindVertexArray(rectArrObj);
@@ -99,6 +101,7 @@ int main(int argc, char** argv)
     BindShader(shader);
     ShaderUniformInt(shader, "Texture", 0);
     ShaderUniformInt(shader, "Texture2", 1);
+    ShaderUniformF32(shader, "mixVal", 0.2);
     
     //~ NOTE(Cel): END TEST OPENGL CODE 
     
@@ -106,7 +109,13 @@ int main(int argc, char** argv)
     {
         //~ PROCESS INPUT
         ProcessInput(window);
+        
         //~ UPDATE
+        Mat4 trans = HMM_Translate(HMM_Vec3(0.5f, -0.5f, 0.0f));
+        trans = HMM_MultiplyMat4(trans, HMM_Rotate((float)glfwGetTime() * 50, HMM_Vec3(0.f, 0.f, 1.f)));
+        
+        Mat4 trans2 = HMM_Translate(HMM_Vec3(-0.5f, 0.5f, 0.0f));
+        trans2 = HMM_MultiplyMat4(trans2, HMM_Scale(HMM_Vec3(fabsf(sinf((float)glfwGetTime())), fabsf(sinf((float)glfwGetTime())), fabsf(sinf((float)glfwGetTime())))));
         
         //~ RENDER
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -114,6 +123,10 @@ int main(int argc, char** argv)
         BindShader(shader);
         
         glBindVertexArray(rectArrObj);
+        
+        ShaderUniformMat4(shader, "transform", trans);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        ShaderUniformMat4(shader, "transform", trans2);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         //~ CHECK EVENTS & SWAP BUFFERS

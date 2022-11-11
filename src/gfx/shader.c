@@ -90,3 +90,7 @@ SHADER_UNIFORM_FUNC(ShaderUniformF32, f32)
 {
     glUniform1f(glGetUniformLocation(shader.handle, name), val);
 }
+SHADER_UNIFORM_FUNC(ShaderUniformMat4, Mat4)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shader.handle, name), 1, GL_FALSE, (f32*)&val);
+}
