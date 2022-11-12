@@ -43,21 +43,65 @@ int main(int argc, char** argv)
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); 
     
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
-    // NOTE(Cel): Alr now for the ULTIMATE OPENGL TEST, rendering a triangle
-    float rectangle[] = 
+    glEnable(GL_DEPTH_TEST);
+    // These are a lot of verticies 
+    float verticies[] =
     {
-        // Position          // Colors            // Texcoords
-        0.5f, 0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f,   1.0f, 1.0f, 0.0f,    0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     
-    uint indicies[] =
+    Vec3 cubePositions[] = 
     {
-        0, 1, 3, // First Triangle
-        1, 2, 3  // Second Triangle
+        HMM_Vec3( 0.0f,  0.0f,  0.0f), 
+        HMM_Vec3( 2.0f,  5.0f, -15.0f), 
+        HMM_Vec3(-1.5f, -2.2f, -2.5f),  
+        HMM_Vec3(-3.8f, -2.0f, -12.3f),  
+        HMM_Vec3( 2.4f, -0.4f, -3.5f),  
+        HMM_Vec3(-1.7f,  3.0f, -7.5f),  
+        HMM_Vec3( 1.3f, -2.0f, -2.5f),  
+        HMM_Vec3( 1.5f,  2.0f, -2.5f), 
+        HMM_Vec3( 1.5f,  0.2f, -1.5f), 
+        HMM_Vec3(-1.3f,  1.0f, -1.5f)  
     };
     
     // TODO(Cel): Temporary Memory Arena, ill pull this out later (JUST FOR TESTING)
@@ -65,32 +109,23 @@ int main(int argc, char** argv)
     M_ArenaInit(&testArena, (void*)backBuff, 4096);
     
     //~ NOTE(Cel): TEST OPENGL CODE
+    VAO cubeVAO = CreateVAO();
+    BindVAO(cubeVAO);
     
-    // TODO(Cel): Abstract all of this into a VAO and VBO stuct
-    uint rectArrObj;
-    glGenVertexArrays(1, &rectArrObj);
-    glBindVertexArray(rectArrObj);
+    VBO cubeVBO = CreateVBO(GL_ARRAY_BUFFER, false, sizeof(verticies), verticies);
+    BindVBO(cubeVBO);
     
-    uint rectVBO;
-    glGenBuffers(1, &rectVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, rectVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle), rectangle, GL_STATIC_DRAW);
-    
-    uint rectEBO;
-    glGenBuffers(1, &rectEBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-    
     Shader shader = CreateShader(&testArena, "res/shaders/vertexShader.vs", "res/shaders/fragmentShader.fs");
+    //~ COORDINATE SYSTEMS
+    Mat4 model = HMM_Rotate(-55.f, HMM_Vec3(1.f, 0.f, 0.f));
+    Mat4 view = HMM_Translate(HMM_Vec3(0.f, 0.f, -3.f));
+    Mat4 projection = HMM_Perspective(45.f, 800.f / 600.f, 0.1f, 100.f);
     
     //~ TEXTURE LOADING
     glActiveTexture(GL_TEXTURE0);
@@ -111,23 +146,28 @@ int main(int argc, char** argv)
         ProcessInput(window);
         
         //~ UPDATE
-        Mat4 trans = HMM_Translate(HMM_Vec3(0.5f, -0.5f, 0.0f));
-        trans = HMM_MultiplyMat4(trans, HMM_Rotate((float)glfwGetTime() * 50, HMM_Vec3(0.f, 0.f, 1.f)));
+        model = HMM_Rotate((float)glfwGetTime() * 50.f, HMM_Vec3(0.5f, 1.f, 0.f));
         
-        Mat4 trans2 = HMM_Translate(HMM_Vec3(-0.5f, 0.5f, 0.0f));
-        trans2 = HMM_MultiplyMat4(trans2, HMM_Scale(HMM_Vec3(fabsf(sinf((float)glfwGetTime())), fabsf(sinf((float)glfwGetTime())), fabsf(sinf((float)glfwGetTime())))));
+        BindShader(shader);
+        ShaderUniformMat4(shader, "model", model);
+        ShaderUniformMat4(shader, "view", view);
+        ShaderUniformMat4(shader, "projection", projection);
         
         //~ RENDER
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         BindShader(shader);
         
-        glBindVertexArray(rectArrObj);
-        
-        ShaderUniformMat4(shader, "transform", trans);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        ShaderUniformMat4(shader, "transform", trans2);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        BindVAO(cubeVAO);
+        for (int i = 0; i < 10; ++i)
+        {
+            Mat4 model = HMM_Translate(cubePositions[i]);
+            f32 angle = 20.f * (i + 1 ) * (float)glfwGetTime();
+            model = HMM_MultiplyMat4(model, HMM_Rotate(angle, HMM_Vec3(1.f, 0.3f, 0.5f)));
+            ShaderUniformMat4(shader, "model", model);
+            
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         
         //~ CHECK EVENTS & SWAP BUFFERS
         glfwPollEvents();

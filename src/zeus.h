@@ -28,6 +28,9 @@
 #include "gfx/shader.c"
 #include "gfx/texture.h"
 #include "gfx/texture.c"
+#include "gfx/vertexObjects.h"
+#include "gfx/vertexObjects.c"
+
 
 //~ APP SETTINGS
 #include "app.h"
