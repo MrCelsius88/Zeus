@@ -30,6 +30,8 @@
 #include "gfx/texture.c"
 #include "gfx/vertexObjects.h"
 #include "gfx/vertexObjects.c"
+#include "gfx/window.h"
+#include "gfx/window.c"
 
 
 //~ APP SETTINGS

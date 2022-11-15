@@ -2,48 +2,9 @@
 
 global M_Arena testArena;
 
-func void 
-framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
-
-func void
-ProcessInput(GLFWwindow* window)
-{
-    // Input processing code goes here.
-    
-}
-
 int main(int argc, char** argv)
 {
-    // TODO(Cel): We will create a custom renderer and abstraction, this is just temporary
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME, 0, 0);
-    if (window == NULL)
-    {
-        LOGERR("Failed to create GLFW window!", 0);
-        glfwTerminate();
-        return 1;
-    }
-    glfwMakeContextCurrent(window);
-    
-    // NOTE(Cel): Initialize GLAD before trying to call OpenGL Functions
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        LOGERR("Failed to initialize GLAD", 0);
-        return 1;
-    }
-    
-    // TODO(Cel): Add aspect ratio correction macros in app.h or in custom renderer file
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT); 
-    
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glEnable(GL_DEPTH_TEST);
+    Window window = CreateWindow(APP_NAME, HMM_Vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
     // These are a lot of verticies 
     float verticies[] =
     {
@@ -140,10 +101,9 @@ int main(int argc, char** argv)
     
     //~ NOTE(Cel): END TEST OPENGL CODE 
     
-    while (!glfwWindowShouldClose(window))
+    while (!WindowShouldClose(window))
     {
         //~ PROCESS INPUT
-        ProcessInput(window);
         
         //~ UPDATE
         model = HMM_Rotate((float)glfwGetTime() * 50.f, HMM_Vec3(0.5f, 1.f, 0.f));
@@ -170,8 +130,8 @@ int main(int argc, char** argv)
         }
         
         //~ CHECK EVENTS & SWAP BUFFERS
-        glfwPollEvents();
-        glfwSwapBuffers(window);
+        PollWindowEvents(&window);
+        glfwSwapBuffers(window.handle);
     }
     
     glfwTerminate();
