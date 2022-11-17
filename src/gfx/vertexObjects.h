@@ -22,6 +22,9 @@ func void
 BindVAO(VAO vao);
 
 func void
+VAOAttribute(VAO currentVAO, VBO buffer, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset);
+
+func void
 DestroyVAO(VAO vao);
 
 func VBO

@@ -3,15 +3,24 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-// All functions for rendering go here.
+#define DEFAULT_VERTEX_SHADER_PATH "res/shaders/vertexShader.vs"
+#define DEFAULT_FRAGMENT_SHADER_PATH "res/shaders/fragmentShader.fs"
+
+typedef struct
+{
+    Window* window;
+    Shader shader;
+    
+    VAO quadVAO;
+} Renderer;
+
+func Renderer
+CreateRenderer(Window* window);
 
 func void
-BeginRender(Window window);
+BeginRender(Renderer renderer);
 
 func void
-RenderTexture(Texture texture);
-
-func void
-EndRender(Window window);
+EndRender(Renderer renderer);
 
 #endif //RENDERER_H

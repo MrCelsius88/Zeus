@@ -14,6 +14,16 @@ BindVAO(VAO vao)
 }
 
 func void
+VAOAttribute(VAO currentVAO, VBO buffer, GLuint index, GLint size, GLenum type, GLsizei stride, size_t offset)
+{
+    BindVAO(currentVAO);
+    BindVBO(buffer);
+    
+    glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void*)offset);
+    glEnableVertexAttribArray(index);
+}
+
+func void
 DestroyVAO(VAO vao)
 {
     glDeleteVertexArrays(1, &vao.handle);

@@ -65,7 +65,7 @@ CreateWindow(const char* title, Vec2 dimensions)
 }
 
 func void
-PollWindowEvents(Window* window)
+UpdateWindow(Window* window)
 {
     _SetCurrentWindow(*window);
     glfwPollEvents();

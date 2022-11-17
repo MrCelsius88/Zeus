@@ -1,5 +1,5 @@
 func int
-CompileShader(M_Arena* arena, const char* path, GLenum type)
+CompileShader(const char* path, GLenum type)
 {
     FILE* shaderSource;
     u32 length;
@@ -17,7 +17,7 @@ CompileShader(M_Arena* arena, const char* path, GLenum type)
     assert(length > 0);
     fseek(shaderSource, 0, SEEK_SET);
     
-    text = M_ArenaAlloc(arena, length);
+    text = malloc(length);
     assert(text);
     
     assert(fread(text, 1, length, shaderSource) == length);
@@ -37,15 +37,16 @@ CompileShader(M_Arena* arena, const char* path, GLenum type)
         LOGERR("Error Compiling Shader! Error: %s", infoLog);
     }
     
+    free(text);
     return shader;
 }
 
 func Shader
-CreateShader(M_Arena* arena, const char* VSPath, const char* FSPath)
+CreateShader(const char* VSPath, const char* FSPath)
 {
     Shader out;
-    out.vertexShader = CompileShader(arena, VSPath, GL_VERTEX_SHADER);
-    out.fragmentShader = CompileShader(arena, FSPath, GL_FRAGMENT_SHADER);
+    out.vertexShader = CompileShader(VSPath, GL_VERTEX_SHADER);
+    out.fragmentShader = CompileShader(FSPath, GL_FRAGMENT_SHADER);
     out.handle = glCreateProgram();
     
     glAttachShader(out.handle, out.vertexShader);

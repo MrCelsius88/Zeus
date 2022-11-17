@@ -11,10 +11,10 @@ typedef struct
 } Shader;
 
 func int
-CompileShader(M_Arena* arena, const char* path, GLenum type); // NOTE(Cel): Called by CreateShader.
+CompileShader(const char* path, GLenum type); // NOTE(Cel): Called by CreateShader.
 
 func Shader
-CreateShader(M_Arena* arena, const char* VSPath, const char* FSPath);
+CreateShader(const char* VSPath, const char* FSPath);
 
 func void
 BindShader(Shader shader);

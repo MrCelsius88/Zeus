@@ -15,7 +15,7 @@ func Window
 CreateWindow(const char* title, Vec2 dimensions);
 
 func void
-PollWindowEvents(Window* window);
+UpdateWindow(Window* window);
 
 func bool
 WindowShouldClose(Window window);

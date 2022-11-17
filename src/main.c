@@ -1,7 +1,5 @@
 #include "zeus.h"
 
-global M_Arena testArena;
-
 int main(int argc, char** argv)
 {
     Window window = CreateWindow(APP_NAME, HMM_Vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -66,8 +64,7 @@ int main(int argc, char** argv)
     };
     
     // TODO(Cel): Temporary Memory Arena, ill pull this out later (JUST FOR TESTING)
-    u8* backBuff = malloc(4096);
-    M_ArenaInit(&testArena, (void*)backBuff, 4096);
+    Renderer renderer = CreateRenderer(&window);
     
     //~ NOTE(Cel): TEST OPENGL CODE
     VAO cubeVAO = CreateVAO();
@@ -82,7 +79,7 @@ int main(int argc, char** argv)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     
-    Shader shader = CreateShader(&testArena, "res/shaders/vertexShader.vs", "res/shaders/fragmentShader.fs");
+    Shader shader = CreateShader("res/shaders/vertexShader.vs", "res/shaders/fragmentShader.fs");
     //~ COORDINATE SYSTEMS
     Mat4 model = HMM_Rotate(-55.f, HMM_Vec3(1.f, 0.f, 0.f));
     Mat4 view = HMM_Translate(HMM_Vec3(0.f, 0.f, -3.f));
@@ -130,7 +127,7 @@ int main(int argc, char** argv)
         }
         
         //~ CHECK EVENTS & SWAP BUFFERS
-        PollWindowEvents(&window);
+        UpdateWindow(&window);
         glfwSwapBuffers(window.handle);
     }
     

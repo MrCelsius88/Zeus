@@ -3,6 +3,8 @@
 #ifndef ZEUS_H
 #define ZEUS_H
 
+//~ NON-ENGINE RELATED
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -19,23 +21,29 @@
 
 #include "utils.h"
 
-//~ MEMORY MANAGEMENT
+//~ HEADERS
+
+// MEMORY MANAGEMENT
 #include "core/zeus_mem.h"
-#include "core/zeus_mem.c"
-
-//~ GRAPHICS
+// GRAPHICS
 #include "gfx/shader.h"
-#include "gfx/shader.c"
 #include "gfx/texture.h"
-#include "gfx/texture.c"
 #include "gfx/vertexObjects.h"
-#include "gfx/vertexObjects.c"
 #include "gfx/window.h"
-#include "gfx/window.c"
-
-
-//~ APP SETTINGS
+#include "gfx/renderer.h"
+// APP SETTINGS
 #include "app.h"
+
+//~ IMPLEMENTATION (now we can seperate implementation into a lib if we wanted.)
+
+// MEMORY MANAGEMENT
+#include "core/zeus_mem.c"
+// GRAPHICS
+#include "gfx/shader.c"
+#include "gfx/texture.c"
+#include "gfx/vertexObjects.c"
+#include "gfx/window.c"
+#include "gfx/renderer.c"
 
 #endif //ZEUS_H
 
