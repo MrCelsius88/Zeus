@@ -8,11 +8,11 @@
 typedef struct
 {
     GLFWwindow* handle;
-    Vec2 dimensions;
+    uint width, height;
 } Window;
 
 func Window
-CreateWindow(const char* title, Vec2 dimensions);
+CreateWindow(const char* title, uint width, uint height);
 
 func void
 UpdateWindow(Window* window);

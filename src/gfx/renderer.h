@@ -8,14 +8,25 @@
 
 typedef struct
 {
+    Mat4 view, projection;
+} Projections;
+
+typedef struct
+{
     Window* window;
-    Shader shader;
+    Camera* camera;
     
+    Shader shader;
     VAO quadVAO;
+    
+    Projections projections;
 } Renderer;
 
 func Renderer
 CreateRenderer(Window* window);
+
+func void
+RendererUseCamera(Renderer* renderer, Camera* camera);
 
 func void
 BeginRender(Renderer renderer);

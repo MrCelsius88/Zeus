@@ -28,18 +28,19 @@ _framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
     
     Window* currentWindow = _GetCurrentWindow();
-    currentWindow->dimensions = (Vec2){ width, height };
+    currentWindow->width = width;
+    currentWindow->height = height;
 }
 
 func Window
-CreateWindow(const char* title, Vec2 dimensions)
+CreateWindow(const char* title, uint width, uint height)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    GLFWwindow* window = glfwCreateWindow(dimensions.X, dimensions.Y, title, 0, 0);
+    GLFWwindow* window = glfwCreateWindow(width, height, title, 0, 0);
     if (window == NULL)
     {
         LOGERR("Failed to create GLFW window!", 0);
@@ -51,7 +52,7 @@ CreateWindow(const char* title, Vec2 dimensions)
     // NOTE(Cel): CALLBACKS
     glfwSetFramebufferSizeCallback(window, _framebuffer_size_callback);
     
-    Window out = {.handle = window, .dimensions = dimensions };
+    Window out = {.handle = window, .width = width, .height = height };
     
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {

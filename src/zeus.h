@@ -30,6 +30,7 @@
 #include "gfx/texture.h"
 #include "gfx/vertexObjects.h"
 #include "gfx/window.h"
+#include "gfx/camera.h"
 #include "gfx/renderer.h"
 // APP SETTINGS
 #include "app.h"
@@ -43,6 +44,7 @@
 #include "gfx/texture.c"
 #include "gfx/vertexObjects.c"
 #include "gfx/window.c"
+#include "gfx/camera.c"
 #include "gfx/renderer.c"
 
 #endif //ZEUS_H

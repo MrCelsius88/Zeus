@@ -33,7 +33,11 @@ typedef hmm_quaternion Quaternion;
 #define Glue(a,b) Glue_(a,b)
 
 #define ArrayCount(a) (sizeof(a) / sizeof(*(a)))
-#define ForEach(array, type, var) { for (type* var = array; (var - array) < ArrayCount(array); var++) }
+
+// NOTE(Cel): Refactored so that we can use this macro on pointers
+// rather than assuming it is being used on an array with known
+// length.
+#define ForEach(array, elementCount, type, var) for (type* var = array; (var - array) < elementCount; var++) 
 
 #define Min(a,b) (((a)<(b))?(a):(b))
 #define Max(a,b) (((a)>(b))?(a):(b))

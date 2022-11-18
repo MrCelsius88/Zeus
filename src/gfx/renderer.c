@@ -23,7 +23,41 @@ CreateRenderer(Window* window)
     VAOAttribute(out.quadVAO, vbo, 0, 3, GL_FLOAT, 5 * sizeof(f32), 0);
     VAOAttribute(out.quadVAO, vbo, 1, 2, GL_FLOAT, 5 * sizeof(f32), 3 * sizeof(f32));
     
+    // NOTE(Cel): Setup a default projection and view matrix
+    out.projections.view = HMM_Mat4d(1.f);
+    
+    // TODO(Cel): Figure out if it should go
+    // 0.f, window->height
+    // or
+    // window->height, 0.f
+    // The latter makes (0, 0) the top left of the screen, if we
+    // do this I want to make sure that we can also replicate it
+    // with a perspective camera. If we can't lets just leave it at
+    // this.
+    out.projections.projection = HMM_Orthographic(0.f, window->width, 0.f, window->height, -1.f, 1.f);
+    
     return out;
+}
+
+func void
+RendererUseCamera(Renderer* renderer, Camera* camera)
+{
+    if (camera != NULL || renderer->camera != camera)
+    { 
+        renderer->camera = camera;
+    }
+    
+    // NOTE(Cel): Now we implement the camera
+    BindShader(renderer->shader);
+    renderer->projections.view = HMM_LookAt(camera->pos, camera->dir, camera->up);
+    if (camera->camType == CAMERA_PERSPECTIVE)
+    {
+        renderer->projections.projection = HMM_Perspective(camera->fov, renderer->window->width / renderer->window->height, camera->clipNear, camera->clipFar);
+    }
+    else if (camera->camType == CAMERA_ORTHOGRAPHIC)
+    {
+        renderer->projections.projection = HMM_Orthographic(0.f, renderer->window->width, 0.f, renderer->window->height, camera->clipNear, camera->clipFar);
+    }
 }
 
 func void
@@ -41,6 +75,8 @@ func void
 RenderQuadTexture(Renderer renderer, Texture texture, Vec3 pos, Vec2 size, f32 rotate)
 {
     BindShader(renderer.shader);
+    ShaderUniformMat4(renderer.shader, "view", renderer.projections.view);
+    ShaderUniformMat4(renderer.shader, "projection", renderer.projections.projection);
     
     Mat4 model = HMM_Translate(pos);
     model = HMM_MultiplyMat4(model, HMM_Translate(HMM_Vec3(0.5f * size.X, 0.5f * size.Y, 0.f)));
