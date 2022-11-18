@@ -75,6 +75,44 @@ Min(sizeof(*(d)),sizeof(*(s))))
 #define MemoryCopyTyped(d,s,c) MemoryCopy((d),(s), \
 Min(sizeof(*(d)),sizeof(*(s)))*(c))
 
+// NOTE(Cel): Color macros taken/"inspired" by 
+// https://github.com/raysan5/raylib/blob/master/src/raylib.h
+
+// NO COLOR PALLETE WAS IN MIND WHEN MAKING COLORS
+// I just looked up the color RGB on google so obviously
+// custom colors would need to be made to match a pallete
+
+#ifndef HANDMADE_MATH
+#error Need new color representation outside of handmade math!
+#else
+
+#define LIGHTGRAY  HMM_Vec4(211, 211, 211, 255)
+#define GRAY       HMM_Vec4(128, 128, 128, 255)
+#define DARKGRAY   HMM_Vec4(169, 169, 169, 255)
+#define YELLOW     HMM_Vec4(255, 255, 0, 255)
+#define GOLD       HMM_Vec4(255, 215, 0, 255)
+#define ORANGE     HMM_Vec4(255, 165, 0, 255)
+#define PINK       HMM_Vec4(255, 192, 203, 255)
+#define RED        HMM_Vec4(255, 0, 0, 255)
+#define MAROON     HMM_Vec4(128, 0, 0, 255)
+#define GREEN      HMM_Vec4(0, 255, 0, 255)
+#define LIME       HMM_Vec4(50, 205, 50, 255)
+#define DARKGREEN  HMM_Vec4(0, 100, 0, 255)
+#define SKYBLUE    HMM_Vec4(135, 206, 235, 255)
+#define BLUE       HMM_Vec4(0, 0, 255, 255)
+#define DARKBLUE   HMM_Vec4(0, 0, 139, 255)
+#define VIOLET     HMM_Vec4(127, 0, 255, 255)
+#define DARKPURPLE HMM_Vec4(48, 25, 52, 255)
+#define BEIGE      HMM_Vec4(245, 245, 220, 255)
+#define BROWN      HMM_Vec4(150, 75, 0, 255)
+#define DARKBROWN  HMM_Vec4(92, 64, 51, 255)
+#define WHITE      HMM_Vec4(255, 255, 255, 255)
+#define BLACK      HMM_Vec4(0, 0, 0, 255)
+#define BLANK      HMM_Vec4(0, 0, 0, 0)
+#define MAGENTA    HMM_Vec4(255, 0, 255, 255)
+
+#endif
+
 func inline bool
 PowerOfTwo(uintptr_t x) { return (x & (x - 1)) == 0; }
 

@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     cam.pos = HMM_Vec3(0.f, 2.f, 3.f);
     cam.dir = HMM_Vec3(0.f, 0.f, 0.f);
     cam.up = HMM_Vec3(0.f, 1.f, 0.f);
-    cam.fov = 45.f;
+    cam.fov = 60.f;
     cam.clipNear = 0.1f;
     cam.clipFar = 100.f;
     
