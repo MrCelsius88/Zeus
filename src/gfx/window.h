@@ -20,7 +20,4 @@ UpdateWindow(Window* window);
 func bool
 WindowShouldClose(Window window);
 
-func void
-DestroyWindow(Window window);
-
 #endif //WINDOW_H

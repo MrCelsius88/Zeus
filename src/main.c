@@ -14,14 +14,7 @@ int main(int argc, char** argv)
     cam.clipNear = 0.1f;
     cam.clipFar = 100.f;
     
-    //~ COORDINATE SYSTEMS
-    Mat4 view = HMM_Translate(HMM_Vec3(0.f, 10.f, -3.f));
-    Mat4 projection = HMM_Perspective(45.f, 800.f / 600.f, 0.1f, 100.f);
-    
-    //~ TEXTURE LOADING
     Texture tex1 = CreateTexture("res/sprites/test_img2.png");
-    
-    //~ NOTE(Cel): END TEST OPENGL CODE 
     
     while (!WindowShouldClose(window))
     {
@@ -41,6 +34,6 @@ int main(int argc, char** argv)
         UpdateWindow(&window);
     }
     
-    glfwTerminate();
+    ZeusClose();
     return 0;
 }

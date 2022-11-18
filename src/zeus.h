@@ -47,5 +47,12 @@
 #include "gfx/camera.c"
 #include "gfx/renderer.c"
 
+// TODO(Cel): Find a better place for this, if needed.
+func void
+ZeusClose(void) // Used for cleanup
+{
+    glfwTerminate();
+}
+
 #endif //ZEUS_H
 
