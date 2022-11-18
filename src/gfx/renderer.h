@@ -21,6 +21,9 @@ func void
 BeginRender(Renderer renderer);
 
 func void
+RenderQuadTexture(Renderer renderer, Texture texture, Vec3 pos, Vec2 size, f32 rotate);
+
+func void
 EndRender(Renderer renderer);
 
 #endif //RENDERER_H

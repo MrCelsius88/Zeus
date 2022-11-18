@@ -59,8 +59,6 @@ CreateWindow(const char* title, Vec2 dimensions)
         exit(1);
     }
     
-    glEnable(GL_DEPTH_TEST);
-    
     return out;
 }
 
