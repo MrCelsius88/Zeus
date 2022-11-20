@@ -17,10 +17,27 @@ int main(int argc, char** argv)
     //Texture tex1 = CreateTexture("res/sprites/test_img2.png");
     Texture texAtlas = CreateTexture("/home/giannib/dev/DungeonMaster/res/sprites/0x72_DungeonTilesetII_v1.4/0x72_DungeonTilesetII_v1.4.png");
     V4 texRect = GetInnerTexcoords(texAtlas, HMM_Vec4(128, 100, 16, 28));
+    V3 pos = {0};
     
     while (!WindowShouldClose(window))
     {
         //~ PROCESS INPUT
+        if (GetKeyDown(window, GLFW_KEY_W))
+        {
+            pos.Y+=2;
+        }
+        if (GetKeyDown(window, GLFW_KEY_S))
+        {
+            pos.Y-=2;
+        }
+        if (GetKeyDown(window, GLFW_KEY_A))
+        {
+            pos.X-=2;
+        }
+        if (GetKeyDown(window, GLFW_KEY_D))
+        {
+            pos.X+=2;
+        }
         
         //~ UPDATE
         
@@ -29,7 +46,7 @@ int main(int argc, char** argv)
         {
             //RendererUseCamera(&renderer, &cam);
             
-            RenderQuadTexture(renderer, texAtlas, texRect, HMM_Vec3(0.f, 0.f, 0.f), HMM_Vec2(160.f, 280.f), 0);
+            RenderQuadTexture(renderer, texAtlas, texRect, pos, HMM_Vec2(160.f, 280.f), 0);
         }
         EndRender(renderer);
         

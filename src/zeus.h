@@ -32,6 +32,9 @@
 #include "gfx/window.h"
 #include "gfx/camera.h"
 #include "gfx/renderer.h"
+// INPUT
+#include "core/zeus_input.h"
+
 // APP SETTINGS
 #include "app.h"
 
@@ -46,6 +49,8 @@
 #include "gfx/window.c"
 #include "gfx/camera.c"
 #include "gfx/renderer.c"
+// INPUT
+#include "core/zeus_input.c"
 
 // TODO(Cel): Find a better place for this, if needed.
 func void
