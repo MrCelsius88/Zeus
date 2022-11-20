@@ -30,19 +30,19 @@ DestroyVAO(VAO vao)
 }
 
 func VBO
-CreateVBO(GLenum type, bool dynamic, size_t dataSize, void* data)
+CreateVBO(GLenum type, bool dynamic)
 {
-    VBO out = 
-    {
-        .type = type,
-        .dynamic = dynamic
-    };
+    VBO out = { .type = type, .dynamic = dynamic };
     glGenBuffers(1, &out.handle);
     
-    glBindBuffer(type, out.handle);
-    glBufferData(type, dataSize, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-    
     return out;
+}
+
+func void
+VBOBuffer(VBO vbo, size_t dataSize, void* data)
+{
+    glBindBuffer(vbo.type, vbo.handle);
+    glBufferData(vbo.type, dataSize, data, vbo.dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 }
 
 func void

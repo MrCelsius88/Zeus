@@ -26,8 +26,8 @@
 // MEMORY MANAGEMENT
 #include "core/zeus_mem.h"
 // GRAPHICS
-#include "gfx/shader.h"
 #include "gfx/texture.h"
+#include "gfx/shader.h"
 #include "gfx/vertexObjects.h"
 #include "gfx/window.h"
 #include "gfx/camera.h"
@@ -40,8 +40,8 @@
 // MEMORY MANAGEMENT
 #include "core/zeus_mem.c"
 // GRAPHICS
-#include "gfx/shader.c"
 #include "gfx/texture.c"
+#include "gfx/shader.c"
 #include "gfx/vertexObjects.c"
 #include "gfx/window.c"
 #include "gfx/camera.c"

@@ -5,35 +5,12 @@ CreateRenderer(Window* window)
     out.window = window;
     out.shader = CreateShader(DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
     
-    VBO vbo;
-    f32 buffer[] = 
-    {
-        // Pos          // Tex
-        0.f, 1.f, 0.f,  0.f, 1.f,
-        1.f, 0.f, 0.f,  1.f, 0.f,
-        0.f, 0.f, 0.f,  0.f, 0.f,
-        
-        0.f, 1.f, 0.f,  0.f, 1.f, 
-        1.f, 1.f, 0.f,  1.f, 1.f,
-        1.f, 0.f, 0.f,  1.f, 0.f,
-    };
-    
     out.quadVAO = CreateVAO();
-    vbo = CreateVBO(GL_ARRAY_BUFFER, false, sizeof(buffer), buffer);
-    VAOAttribute(out.quadVAO, vbo, 0, 3, GL_FLOAT, 5 * sizeof(f32), 0);
-    VAOAttribute(out.quadVAO, vbo, 1, 2, GL_FLOAT, 5 * sizeof(f32), 3 * sizeof(f32));
+    BindVAO(out.quadVAO);
+    out.quadVBO = CreateVBO(GL_ARRAY_BUFFER, false);
     
     // NOTE(Cel): Setup a default projection and view matrix
     out.projections.view = HMM_Mat4d(1.f);
-    
-    // TODO(Cel): Figure out if it should go
-    // 0.f, window->height
-    // or
-    // window->height, 0.f
-    // The latter makes (0, 0) the top left of the screen, if we
-    // do this I want to make sure that we can also replicate it
-    // with a perspective camera. If we can't lets just leave it at
-    // this.
     out.projections.projection = HMM_Orthographic(0.f, window->width, 0.f, window->height, -1.f, 1.f);
     
     return out;
@@ -42,21 +19,24 @@ CreateRenderer(Window* window)
 func void
 RendererUseCamera(Renderer* renderer, Camera* camera)
 {
-    if (camera != NULL || renderer->camera != camera)
+    renderer->camera = camera;
+    if (camera != NULL)
+    {
+        renderer->projections.view = HMM_LookAt(camera->pos, camera->dir, camera->up);
+        if (camera->camType == CAMERA_PERSPECTIVE)
+        {
+            renderer->projections.projection = HMM_Perspective(camera->fov, renderer->window->width / renderer->window->height, camera->clipNear, camera->clipFar);
+        }
+        else if (camera->camType == CAMERA_ORTHOGRAPHIC)
+        {
+            renderer->projections.projection = HMM_Orthographic(0.f, renderer->window->width, 0.f, renderer->window->height, camera->clipNear, camera->clipFar);
+        }
+    }
+    else
     { 
-        renderer->camera = camera;
-    }
-    
-    // NOTE(Cel): Now we implement the camera
-    BindShader(renderer->shader);
-    renderer->projections.view = HMM_LookAt(camera->pos, camera->dir, camera->up);
-    if (camera->camType == CAMERA_PERSPECTIVE)
-    {
-        renderer->projections.projection = HMM_Perspective(camera->fov, renderer->window->width / renderer->window->height, camera->clipNear, camera->clipFar);
-    }
-    else if (camera->camType == CAMERA_ORTHOGRAPHIC)
-    {
-        renderer->projections.projection = HMM_Orthographic(0.f, renderer->window->width, 0.f, renderer->window->height, camera->clipNear, camera->clipFar);
+        // NOTE(Cel): Revert back to default projection and view
+        renderer->projections.view = HMM_Mat4d(1.f);
+        renderer->projections.projection = HMM_Orthographic(0.f, renderer->window->width, 0.f, renderer->window->height, -1.f, 1.f);
     }
 }
 
@@ -67,16 +47,34 @@ BeginRender(Renderer renderer)
     glClearColor(1.f, 1.f, 1.f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     BindShader(renderer.shader);
 }
 
 func void
-RenderQuadTexture(Renderer renderer, Texture texture, Vec3 pos, Vec2 size, f32 rotate)
+RenderQuadTexture(Renderer renderer, Texture texture, Vec4 texCoords, Vec3 pos, Vec2 size, f32 rotate)
 {
     BindShader(renderer.shader);
     ShaderUniformMat4(renderer.shader, "view", renderer.projections.view);
     ShaderUniformMat4(renderer.shader, "projection", renderer.projections.projection);
+    ShaderUniformTexture2D(renderer.shader, "Texture", texture);
+    
+    f32 buffer[] = 
+    {
+        // Pos          // Tex
+        1.f, 0.f, 0.f,  texCoords.Z, texCoords.W,
+        0.f, 0.f, 0.f,  texCoords.X, texCoords.W,
+        0.f, 1.f, 0.f,  texCoords.X, texCoords.Y,
+        
+        1.f, 0.f, 0.f,  texCoords.Z, texCoords.W, 
+        0.f, 1.f, 0.f,  texCoords.X, texCoords.Y,
+        1.f, 1.f, 0.f,  texCoords.Z, texCoords.Y,
+    };
+    VBOBuffer(renderer.quadVBO, sizeof(buffer), buffer);
+    VAOAttribute(renderer.quadVAO, renderer.quadVBO, 0, 3, GL_FLOAT, 5 * sizeof(f32), 0);
+    VAOAttribute(renderer.quadVAO, renderer.quadVBO, 1, 2, GL_FLOAT, 5 * sizeof(f32), 3 * sizeof(f32));
     
     Mat4 model = HMM_Translate(pos);
     model = HMM_MultiplyMat4(model, HMM_Translate(HMM_Vec3(0.5f * size.X, 0.5f * size.Y, 0.f)));
@@ -87,7 +85,7 @@ RenderQuadTexture(Renderer renderer, Texture texture, Vec3 pos, Vec2 size, f32 r
     ShaderUniformMat4(renderer.shader, "model", model);
     
     BindVAO(renderer.quadVAO);
-    BindTexture(texture);
+    BindVBO(renderer.quadVBO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 

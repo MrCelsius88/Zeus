@@ -18,6 +18,7 @@ typedef struct
     
     Shader shader;
     VAO quadVAO;
+    VBO quadVBO;
     
     Projections projections;
 } Renderer;
@@ -32,7 +33,7 @@ func void
 BeginRender(Renderer renderer);
 
 func void
-RenderQuadTexture(Renderer renderer, Texture texture, Vec3 pos, Vec2 size, f32 rotate);
+RenderQuadTexture(Renderer renderer, Texture texture, Vec4 texCoords, Vec3 pos, Vec2 size, f32 rotate);
 
 func void
 EndRender(Renderer renderer);

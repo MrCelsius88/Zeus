@@ -26,5 +26,8 @@ SHADER_UNIFORM_FUNC(ShaderUniformBool, bool);
 SHADER_UNIFORM_FUNC(ShaderUniformInt, int);
 SHADER_UNIFORM_FUNC(ShaderUniformF32, f32);
 SHADER_UNIFORM_FUNC(ShaderUniformMat4, Mat4);
+// TODO(Cel): Add texture index to allow for multiple
+// textures passed to one shader.
+SHADER_UNIFORM_FUNC(ShaderUniformTexture2D, Texture);
 
 #endif //SHADER_H

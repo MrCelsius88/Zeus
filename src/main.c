@@ -14,7 +14,9 @@ int main(int argc, char** argv)
     cam.clipNear = 0.1f;
     cam.clipFar = 100.f;
     
-    Texture tex1 = CreateTexture("res/sprites/test_img2.png");
+    //Texture tex1 = CreateTexture("res/sprites/test_img2.png");
+    Texture texAtlas = CreateTexture("/home/giannib/dev/DungeonMaster/res/sprites/0x72_DungeonTilesetII_v1.4/0x72_DungeonTilesetII_v1.4.png");
+    V4 texRect = GetInnerTexcoords(texAtlas, HMM_Vec4(128, 100, 16, 28));
     
     while (!WindowShouldClose(window))
     {
@@ -25,9 +27,9 @@ int main(int argc, char** argv)
         //~ RENDER
         BeginRender(renderer);
         {
-            RendererUseCamera(&renderer, &cam);
+            //RendererUseCamera(&renderer, &cam);
             
-            RenderQuadTexture(renderer, tex1, HMM_Vec3(0.f, 0.f, 0.f), HMM_Vec2(1.f, 1.f), 0);
+            RenderQuadTexture(renderer, texAtlas, texRect, HMM_Vec3(0.f, 0.f, 0.f), HMM_Vec2(160.f, 280.f), 0);
         }
         EndRender(renderer);
         

@@ -5,15 +5,15 @@
 
 typedef struct
 {
-    uint handle;
-    int width, height;
-} Texture;
-
-typedef struct
-{
     u8* data;
     int width, height;
 } Image;
+
+typedef struct
+{
+    uint handle;
+    int width, height;
+} Texture;
 
 func Image
 LoadImage(const char* path);
@@ -32,5 +32,8 @@ BindTexture(Texture texture);
 
 func void
 UnloadTexture(Texture texture);
+
+func Vec4
+GetInnerTexcoords(Texture atlas, Vec4 rect);
 
 #endif //TEXTURE_H

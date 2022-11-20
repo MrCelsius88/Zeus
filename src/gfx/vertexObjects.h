@@ -28,7 +28,10 @@ func void
 DestroyVAO(VAO vao);
 
 func VBO
-CreateVBO(GLenum type, bool dynamic, size_t dataSize, void* data);
+CreateVBO(GLenum type, bool dynamic);
+
+func void
+VBOBuffer(VBO vbo, size_t dataSize, void* data);
 
 func void
 BindVBO(VBO vbo);
